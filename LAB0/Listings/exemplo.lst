@@ -1,0 +1,176 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; Exemplo.s
+    2 00000000         ; Desenvolvido para a placa EK-TM4C1294XL
+    3 00000000         ; Prof. Guilherme Peron
+    4 00000000         ; 12/03/2018
+    5 00000000         
+    6 00000000         ; ------------------------------------------------------
+                       -------------------------
+    7 00000000                 THUMB                        ; Instruções do tip
+                                                            o Thumb-2
+    8 00000000         ; ------------------------------------------------------
+                       -------------------------
+    9 00000000         ; Declarações EQU - Defines
+   10 00000000         ;<NOME>         EQU <VALOR>
+   11 00000000         ; ------------------------------------------------------
+                       -------------------------
+   12 00000000         ; Área de Dados - Declarações de variáveis
+   13 00000000                 AREA             DATA, ALIGN=2
+   14 00000000         ; Se alguma variável for chamada em outro arquivo
+   15 00000000         ;EXPORT  <var> [DATA,SIZE=<tam>]   ; Permite chamar a va
+                       riável <var> a 
+   16 00000000         ; partir de outro arquivo
+   17 00000000         ;<var> SPACE <tam>                        ; Declara uma 
+                       variável de nome <var>
+   18 00000000         ; de <tam> bytes a partir da primeira 
+   19 00000000         ; posição da RAM  
+   20 00000000         
+   21 00000000         ; ------------------------------------------------------
+                       -------------------------
+   22 00000000         ; Área de Código - Tudo abaixo da diretiva a seguir será
+                        armazenado na memória de 
+   23 00000000         ;                  código
+   24 00000000                 AREA             |.text|, CODE, READONLY, ALIGN=
+2
+   25 00000000         
+   26 00000000         ; Se alguma função do arquivo for chamada em outro arqui
+                       vo 
+   27 00000000                 EXPORT           Start       ; Permite chamar a 
+                                                            função Start a part
+                                                            ir de 
+   28 00000000         ; outro arquivo. No caso startup.s
+   29 00000000         
+   30 00000000         ; Se chamar alguma função externa 
+   31 00000000         ;IMPORT <func>              ; Permite chamar dentro dest
+                       e arquivo uma 
+   32 00000000         ; função <func>
+   33 00000000         
+   34 00000000         ; ------------------------------------------------------
+                       -------------------------
+   35 00000000         ; Função main()
+   36 00000000         Start
+   37 00000000         
+   38 00000000         ;loop_ext:
+   39 00000000         ;   mov ram, #0x20000000
+   40 00000000         ;   mov tam, #10
+   41 00000000         ;   mov troca, #0
+   42 00000000         ;   mov i, #1
+   43 00000000         ;   
+   44 00000000         ;loop_int:
+   45 00000000         ;   ldr comp, [ram]
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   46 00000000         ;   ldr compv, [ram, #8]
+   47 00000000         ;   cmp comp, compv
+   48 00000000         ;   ittt gt 
+   49 00000000         ;    movgt troca,#1
+   50 00000000         ;    strgt compv, [ram]
+   51 00000000         ;    strgt comp, [ram, #8]!
+   52 00000000         ;   add i, #1
+   53 00000000         ;   cmp i, tam
+   54 00000000         ;   bne loop_int
+   55 00000000         ;   cmp troca, #0
+   56 00000000         ;   bne loop_ext
+   57 00000000         
+   58 00000000         ; r0 = ram
+   59 00000000         ; r1 = tam
+   60 00000000         ; r2 = troca
+   61 00000000         ; r3 = i
+   62 00000000         ; r4 = comp
+   63 00000000         ; r5 = compv
+   64 00000000         
+   65 00000000         loop_ext
+   66 00000000 F04F 5000       mov              r0, #0x20000000
+   67 00000004 F04F 010A       mov              r1, #10
+   68 00000008 F04F 0200       mov              r2, #0
+   69 0000000C F04F 0301       mov              r3, #1
+   70 00000010         
+   71 00000010         loop_int
+   72 00000010 7804            ldrb             r4, [r0]
+   73 00000012 7845            ldrb             r5, [r0, #1]
+   74 00000014 42AC            cmp              r4, r5
+   75 00000016 BFC2            ittt             gt
+   76 00000018 2201            movgt            r2,#1
+   77 0000001A 7005            strbgt           r5, [r0]
+   78 0000001C 7044            strbgt           r4, [r0, #1]
+   79 0000001E F100 0001       add              r0, #1
+   80 00000022 F103 0301       add              r3, #1
+   81 00000026 428B            cmp              r3, r1
+   82 00000028 D1F2            bne              loop_int
+   83 0000002A 2A00            cmp              r2, #0
+   84 0000002C D1E8            bne              loop_ext
+   85 0000002E         
+   86 0000002E BF00            nop
+   87 00000030                 ALIGN                        ; garante que o fim
+                                                             da seção está alin
+                                                            hada 
+   88 00000030                 END                          ; fim do arquivo
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+erwork --depend=.\objects\exemplo.d -o.\objects\exemplo.o -I.\RTE\_Target_1 -IC
+:\Keil_v5\ARM\PACK\Keil\TM4C_DFP\1.1.0\Device\Include\TM4C129 -IC:\Keil_v5\ARM\
+CMSIS\Include --predefine="__EVAL SETA 1" --predefine="__UVISION_VERSION SETA 5
+26" --predefine="TM4C1294NCPDT SETA 1" --list=.\listings\exemplo.lst exemplo.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+DATA 00000000
+
+Symbol: DATA
+   Definitions
+      At line 13 in file exemplo.s
+   Uses
+      None
+Comment: DATA unused
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 24 in file exemplo.s
+   Uses
+      None
+Comment: .text unused
+Start 00000000
+
+Symbol: Start
+   Definitions
+      At line 36 in file exemplo.s
+   Uses
+      At line 27 in file exemplo.s
+Comment: Start used once
+loop_ext 00000000
+
+Symbol: loop_ext
+   Definitions
+      At line 65 in file exemplo.s
+   Uses
+      At line 84 in file exemplo.s
+Comment: loop_ext used once
+loop_int 00000010
+
+Symbol: loop_int
+   Definitions
+      At line 71 in file exemplo.s
+   Uses
+      At line 82 in file exemplo.s
+Comment: loop_int used once
+4 symbols
+339 symbols in table
