@@ -76,7 +76,7 @@ Start
 	BL SysTick_Init              ;Chama a subrotina para inicializar o SysTick
 	BL GPIO_Init                 ;Chama a subrotina que inicializa os GPIO
 
-; R5 é o contador
+; R5 é o número a ser mostrado
 ; R6 é o passo
 ; R11 flag que diz se o botão SW1 está apertado (1) ou não (0)
 ; R10 flag que diz se o botão SW2 está apertado (1) ou não (0)
@@ -86,12 +86,12 @@ Start
 	MOV R6, #1		;Inicia com passo 1
 	MOV R12, #1		;Contador para os LEDs
 MainLoop
-	MOV R5, #0		;Inicia a contagem em 0
+	MOV R5, #0		;Inicia número em 0
 Contagem
-	MOV R9, #0
+	MOV R9, #0		;Inicia 
 Mostra_1s
 	CMP R11, #1
-	BLEQ Acrescenta_Contador
+	BLEQ Incrementa_Contador
 	CMP R10, #1
 	BLEQ Decrementa_Contador
 	
@@ -113,19 +113,19 @@ Mostra_1s
 	
 
 ;--------------------------------------------------------------------------------
-; Função Acrescenta_Contador
+; Função Incrementa_Contador
 ; Parâmetro de entrada: R6 -> passo de contagem
 ; Parâmetro de saída: R6 -> incrementado em um
-Acrescenta_Contador
+Incrementa_Contador
 	PUSH {LR}
 	BL Le_Botao_SW1
 	POP {LR}
 	CMP R11, #0
-	BNE Fim_Acrescenta_Contador
+	BNE Fim_Incrementa_Contador
 	CMP R6, #9
-	BEQ Fim_Acrescenta_Contador
+	BEQ Fim_Incrementa_Contador
 	ADD R6, #1
-Fim_Acrescenta_Contador
+Fim_Incrementa_Contador
 	BX LR
 	
 ;--------------------------------------------------------------------------------
@@ -435,30 +435,6 @@ Le_Botao_SW2
 Seta_SW2
 	MOV R10, #1
 	BX LR
-	
-	
-;--------------------------------------------------------------------------------
-; Função Pisca_LED
-; Parâmetro de entrada: Não tem
-; Parâmetro de saída: Não tem
-; Tem que fazer o LED piscar
-;Pisca_LED
-;	MOV R0, #2_00000001			 ;Setar o parâmetro de entrada da função como o BIT0
-;	PUSH {LR}
-;	BL PortF_Output				 ;Chamar a função para setar o LED4
-;	MOV R0, #1000				 ; parâmetro da função SysTick_Wait1ms
-;	BL SysTick_Wait1ms
-;	MOV R0, #2_00000000
-;	BL PortF_Output				 ;Chamar a função para desligar o LED4
-;	MOV R0, #1000				 ; parâmetro da função SysTick_Wait1ms
-;	BL SysTick_Wait1ms
-;	POP {LR}
-;	BX LR
-
-; ****************************************
-; Escrever função que acende o LED, espera 1 segundo, apaga o LED e espera 1 s
-; Esta função deve chamar a rotina SysTick_Wait1ms com o parâmetro de entrada em R0
-; ****************************************
 
 ; -------------------------------------------------------------------------------------------------------------------------
 ; Fim do Arquivo
